@@ -8,7 +8,7 @@
 int main(int argc, char * argv[]){
     Artigo a;
 
-    if(strcmp(argv[1], "-a")==0){
+    if(strcmp(argv[1], "-a") == 0){
         a = newArtigo(1,atof(argv[3]));
         saveArtigo(&a);
     }

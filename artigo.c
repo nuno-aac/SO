@@ -22,11 +22,11 @@ void artigoTrocaPreco(Artigo *a, double preco){
     (a -> preco) = preco;
 }
 
-double getPreco(Artigo *a, double preco){
+double getPreco(Artigo *a){
     return (a -> preco);
 }
 
-off_t getStringPos(Artigo *a, double preco){
+off_t getStringPos(Artigo *a){
     return (a -> string);
 }
 
