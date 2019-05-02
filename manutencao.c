@@ -41,12 +41,12 @@ int main(int argc, char * argv[]){
     numread = getOp(0, buf);
 
     while(numread > 1){
-        printf("%s\n", buf);
+        //printf("%s\n", buf);
         if(buf[0] == 'a') printf("era A!\n");
 
         currentTok = strtok(buf, " ");
         //printf("[DEBUG] OP = %s\n", currentTok);
-        op = strdup(currentTok);
+        op = currentTok[0];
         currentTok = strtok(NULL, " ");
         //printf("[DEBUG] String = %s(com %lu elem)\n", currentTok, strlen(currentTok));
         stdizeName(stdName, currentTok);
@@ -56,11 +56,11 @@ int main(int argc, char * argv[]){
         preco = atoi(currentTok);
         //printf("[DEBUG] preco não é %d\n", preco + 5);
 
-        if(strcmp(op, "a") == 0){
+        if(op == 'a'){
             a = newArtigo(sizeof(stdName),preco);
             saveArtigo(&a);
         }
-        if(strcmp(op, "u") == 0){
+        if(op == 'a'){
 
         }
 
