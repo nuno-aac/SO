@@ -35,7 +35,7 @@ void stdizeName(char * stdName, char * name){
 
 int main(int argc, char * argv[]){
     Artigo a;
-    char buf[128], stdName[10], *op, *currentTok;
+    char buf[128], stdName[10], op, *currentTok;
     int numread, preco;
 
     numread = getOp(0, buf);
@@ -59,6 +59,9 @@ int main(int argc, char * argv[]){
         if(strcmp(op, "a") == 0){
             a = newArtigo(sizeof(stdName),preco);
             saveArtigo(&a);
+        }
+        if(strcmp(op, "u") == 0){
+
         }
 
         numread = getOp(0, buf);
