@@ -80,7 +80,7 @@ void updateArtigoPreco(off_t code, double preco){
 void updateArtigoNome(off_t code, char * stdName){
     int fd;
 
-    fd = open("./ARTIGOS", O_WRONLY, 0700);
+    fd = open("./STRINGS", O_WRONLY, 0700);
     lseek(fd, code * sizeof(stdName), SEEK_SET);
     write(fd, stdName, sizeof(stdName));
     close(fd);

@@ -1,9 +1,11 @@
+#include "artigo.h"
+
 typedef struct stock{
-    Artigo a;
+    Artigo artigo;
     int quantidade;
 } Stock;
 
 
 //API
-int getQuantidade(Stock *s);
+int getQuantidadeStock(Stock *s);
 void saveToStock(Stock *s);

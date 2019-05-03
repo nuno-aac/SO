@@ -4,9 +4,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stock.h"
-#include "artigo.h"
 
-Stock newStock(Artigo *a, int quantidade){
+Stock newStock(Artigo a, int quantidade){
     Stock s;
 
     s.artigo = a;
@@ -16,7 +15,7 @@ Stock newStock(Artigo *a, int quantidade){
     return s;
 }
 
-int getQuantidade(Stock *s){
+int getQuantidadeStock(Stock *s){
     return (s -> quantidade);
 }
 

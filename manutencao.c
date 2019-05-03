@@ -18,7 +18,7 @@ ssize_t getOp(int fildes, char *buf){
         if(byte == '\n') break;
     }
 
-    buf[i] = '\0';
+    buf[i-1] = '\0';
 
     return i;
 }
