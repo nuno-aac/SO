@@ -1,5 +1,5 @@
 typedef struct artigo{
-    off_t string;
+    off_t code;
     double preco;
 } Artigo;
 
@@ -9,4 +9,7 @@ int artigoPreco(Artigo *a);
 void artigoTrocaPreco(Artigo *a, double preco);
 double getPreco(Artigo *a);
 off_t getStringPos(Artigo *a);
-void saveArtigo(Artigo *a);
+void saveArtigo(Artigo a, char * stdName);
+Artigo getArtigo(off_t code, char * stdName);
+void updateArtigoPreco(off_t code, double preco);
+void updateArtigoNome(off_t code, char * stdName);
