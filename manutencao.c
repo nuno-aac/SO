@@ -36,32 +36,43 @@ void stdizeName(char * stdName, char * name){
 int main(int argc, char * argv[]){
     Artigo a;
     char buf[128], stdName[10], op, *currentTok;
-    int numread, preco;
+    int numread, preco, codigo;
 
     numread = getOp(0, buf);
 
     while(numread > 1){
-        //printf("%s\n", buf);
-        if(buf[0] == 'a') printf("era A!\n");
-
         currentTok = strtok(buf, " ");
-        //printf("[DEBUG] OP = %s\n", currentTok);
         op = currentTok[0];
-        currentTok = strtok(NULL, " ");
-        //printf("[DEBUG] String = %s(com %lu elem)\n", currentTok, strlen(currentTok));
-        stdizeName(stdName, currentTok);
-        //printf("[DEBUG] stdName = %s(com %lu elem mas tamanho %lu)\n", stdName, strlen(stdName), sizeof(stdName));
-        currentTok = strtok(NULL, " ");
-        //printf("[DEBUG] preco = %s\n", currentTok);
-        preco = atoi(currentTok);
-        //printf("[DEBUG] preco não é %d\n", preco + 5);
-
-        if(op == 'a'){
-            a = newArtigo(sizeof(stdName),preco);
-            saveArtigo(&a);
-        }
-        if(op == 'a'){
-
+        switch (op) {
+            case 'a':
+                currentTok = strtok(NULL, " ");
+                stdizeName(stdName, currentTok);
+                //printf("[DEBUG] stdName = %s(com %lu elem mas tamanho %lu)\n", stdName, strlen(stdName), sizeof(stdName));
+                currentTok = strtok(NULL, " ");
+                preco = atoi(currentTok);
+                a = newArtigo(sizeof(stdName),preco);
+                saveArtigo(a, stdName);
+                break;
+            case 'g':
+                currentTok = strtok(NULL, " ");
+                codigo = atoi(currentTok);
+                a = getArtigo(codigo, stdName);
+                printf("[DEBUG] O Preco do produto %s é: %f\n", stdName, a.preco);
+                break;
+            case 'p':
+                currentTok = strtok(NULL, " ");
+                codigo = atoi(currentTok);
+                currentTok = strtok(NULL, " ");
+                preco = atoi(currentTok);
+                updateArtigoPreco(codigo, preco);
+                break;
+            case 'n':
+                currentTok = strtok(NULL, " ");
+                codigo = atoi(currentTok);
+                currentTok = strtok(NULL, " ");
+                stdizeName(stdName, currentTok);
+                updateArtigoNome(codigo, stdName);
+                break;
         }
 
         numread = getOp(0, buf);
