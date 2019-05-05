@@ -10,6 +10,7 @@ void artigoTrocaPreco(Artigo *a, double preco);
 double getPreco(Artigo *a);
 off_t getStringPos(Artigo *a);
 void saveArtigo(Artigo a, char * stdName);
-Artigo getArtigo(off_t code, char * stdName);
+int getArtigo(off_t code, char * stdName, Artigo * a);
 void updateArtigoPreco(off_t code, double preco);
 void updateArtigoNome(off_t code, char * stdName);
+void translateArtigos();

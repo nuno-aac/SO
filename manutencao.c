@@ -36,7 +36,7 @@ void stdizeName(char * stdName, char * name){
 int main(int argc, char * argv[]){
     Artigo a;
     char buf[128], stdName[10], op, *currentTok;
-    int numread, preco, codigo;
+    int numread, preco, codigo, readartigo;
 
     numread = getOp(0, buf);
 
@@ -56,8 +56,11 @@ int main(int argc, char * argv[]){
             case 'g':
                 currentTok = strtok(NULL, " ");
                 codigo = atoi(currentTok);
-                a = getArtigo(codigo, stdName);
-                printf("[DEBUG] O Preco do produto %s é: %f\n", stdName, a.preco);
+                readartigo = getArtigo(codigo, stdName, &a);
+                if(readartigo)
+                    printf("[DEBUG] O Preco do produto %s é: %f\n", stdName, a.preco);
+                else
+                    printf("[DEBUG] O Artigo de codigo %d não existe\n", codigo);
                 break;
             case 'p':
                 currentTok = strtok(NULL, " ");
@@ -73,6 +76,10 @@ int main(int argc, char * argv[]){
                 stdizeName(stdName, currentTok);
                 updateArtigoNome(codigo, stdName);
                 break;
+            case 't':
+                translateArtigos();
+                break;
+
         }
 
         numread = getOp(0, buf);

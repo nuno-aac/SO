@@ -44,13 +44,12 @@ void saveArtigo(Artigo a, char * stdName){
     return;
 }
 
-Artigo getArtigo(off_t code, char * stdName){
-    int fd;
-    Artigo a;
+int getArtigo(off_t code, char * stdName, Artigo *a){
+    int fd, numread;
 
     fd = open("./ARTIGOS", O_RDONLY, 0700);
     lseek(fd, code * sizeof(Artigo), SEEK_SET);
-    read(fd, &a, sizeof(Artigo));
+    numread = read(fd, a, sizeof(Artigo));
     close(fd);
 
     fd = open("./STRINGS", O_RDONLY, 0700);
@@ -58,7 +57,7 @@ Artigo getArtigo(off_t code, char * stdName){
     read(fd, stdName, sizeof(stdName));
     close(fd);
 
-    return a;
+    return numread;
 }
 
 void updateArtigoPreco(off_t code, double preco){
@@ -66,7 +65,7 @@ void updateArtigoPreco(off_t code, double preco){
     char stdName[10];
     Artigo a;
 
-    a = getArtigo(code, stdName);
+    getArtigo(code, stdName, &a);
     a.preco = preco;
 
     fd = open("./ARTIGOS", O_WRONLY, 0700);
@@ -81,9 +80,31 @@ void updateArtigoNome(off_t code, char * stdName){
     int fd;
 
     fd = open("./STRINGS", O_WRONLY, 0700);
-    lseek(fd, code * sizeof(stdName), SEEK_SET);
+    lseek(fd,code * sizeof(stdName), SEEK_SET);
     write(fd, stdName, sizeof(stdName));
     close(fd);
+
+    return;
+}
+
+void translateArtigos(){
+    int fd, code, read;
+    char string[50];
+    char stdName[10];
+    Artigo a;
+
+    code = 0;
+
+    while(read = getArtigo(code, stdName, &a) && read > 0){
+        snprintf(string, 50, "Artigo:%s Preco:%f\n\0", stdName, a.preco);
+        if(code == 0)
+            fd = open("./artigos.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
+        else
+            fd = open("./artigos.txt",  O_CREAT | O_WRONLY | O_APPEND, 0700);
+        write(fd, string, strlen(string));
+        close(fd);
+        code++;
+    }
 
     return;
 }
