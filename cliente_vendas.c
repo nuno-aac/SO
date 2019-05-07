@@ -1,5 +1,6 @@
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
@@ -22,38 +23,36 @@ ssize_t getOp(int fildes, char *buf){
 }
 
 int main(int argc, char* argv[]) {
-	char buf[128], op, *currentTok;
-    int numread, codigo;
-
-    numread = getOp(0, buf);
+	char buf[128], *currentTok;
+    int numread, codigo, stock, op;
 
 	int server = open("pip", O_WRONLY);
 	if (server < 0) {
 		printf("Server offline\n");
 		return 1;
 	}
-	while (numread > 1)
+
+    numread = getOp(0, buf);
+	while (numread > 1){
 		currentTok = strtok(buf, " ");
-        op = currentTok[0];
+        codigo = atoi(currentTok);
+        currentTok = strtok(NULL, " ");
 
-        switch (op) {
-            case 'a':
-                currentTok = strtok(NULL, " ");
-                stdizeName(stdName, currentTok);
-
-                currentTok = strtok(NULL, " ");
-                preco = atoi(currentTok);
-                a = newArtigo(sizeof(stdName),preco);
-                saveArtigo(a, stdName);
-                break;
-            case default:
-                printf("[DEBUG] Introduza uma operação válida\n");
-                break;
-
-
-		write(server, argv[i], strlen(argv[i]));
-
+        if(currentTok == NULL){
+            op = 0;
+            write(server, &op, sizeof(int));
+            write(server, &codigo, sizeof(int));
+        }
+        else{
+            stock = atoi(currentTok);
+            op = 1;
+            write(server, &op, sizeof(int));
+            write(server, &codigo, sizeof(int));
+            write(server, &stock, sizeof(int));
+        }
 		numread = getOp(0, buf);
-	close(server);
-	return 0;
+    }
+
+    close(server);
+    return 0;
 }

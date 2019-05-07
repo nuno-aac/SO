@@ -5,25 +5,39 @@
 #include <stdlib.h>
 #include "stock.h"
 
-Stock newStock(Artigo a, int quantidade){
-    Stock s;
 
-    s.artigo = a;
-    s.quantidade = quantidade;
-
-
-    return s;
-}
-
-int getQuantidadeStock(Stock *s){
-    return (s -> quantidade);
-}
-
-void saveToStock(Stock *s){
+void saveToStock(int quantidade){
     int fd;
 
-    fd = open("./STOCKS", O_CREAT | O_APPEND | O_WRONLY, 0700);
-    write(fd, s, sizeof(Stock));
+    fd = open("./stocks", O_CREAT | O_APPEND | O_WRONLY, 0700);
+    write(fd, &quantidade, sizeof(int));
+    close(fd);
+
+    return;
+}
+
+int getStock(off_t code, int * quantidade){
+    int fd, numread;
+
+    fd = open("./stocks", O_RDONLY, 0700);
+    lseek(fd, code * sizeof(int), SEEK_SET);
+    numread = read(fd, quantidade, sizeof(int));
+    close(fd);
+
+    return numread;
+}
+
+void updateStock(off_t code, int changeQuant){
+    int fd;
+    int quantActual;
+
+    getStock(code, &quantActual);
+
+    quantActual += changeQuant;
+
+    fd = open("./stocks", O_WRONLY, 0700);
+    lseek(fd, code * sizeof(int), SEEK_SET);
+    write(fd, quantActual, sizeof(int));
     close(fd);
 
     return;

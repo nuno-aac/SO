@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -O3 -Wall
 
-ma: artigo.o manutencao.o
-	$(CC) $(CFLAGS) artigo.o manutencao.o -o ma
+ma: stock.o artigo.o manutencao.o
+	$(CC) $(CFLAGS) artigo.o manutencao.o stock.o -o ma
 
 sv: stock.o vendas.o servidor.o
 	$(CC) $(CFLAGS) stock.o vendas.o servidor.o -o sv
@@ -10,7 +10,7 @@ sv: stock.o vendas.o servidor.o
 cv: cliente_vendas.o
 	$(CC) $(CFLAGS) cliente_vendas.o -o cv
 
-manutencao.o: manutencao.c artigo.h
+manutencao.o: manutencao.c artigo.h stock.h
 	$(CC) $(CFLAGS) -c manutencao.c
 
 artigo.o: artigo.c artigo.h
@@ -19,7 +19,7 @@ artigo.o: artigo.c artigo.h
 vendas.o: vendas.c vendas.h
 	$(CC) $(CFLAGS) -c vendas.c
 
-stock.o: stock.c stock.h artigo.h
+stock.o: stock.c stock.h
 	$(CC) $(CFLAGS) -c stock.c
 
 servidor.o: servidor.c
@@ -29,4 +29,4 @@ cliente_vendas.o: cliente_vendas.c
 	$(CC) $(CFLAGS) -c cliente_vendas.c
 
 clean:
-	rm *.o ma STRINGS ARTIGOS vendas artigos.txt
+	rm *.o ma STRINGS ARTIGOS vendas stocks artigos.txt

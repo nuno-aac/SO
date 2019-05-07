@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "artigo.h"
+#include "stock.h"
 
 ssize_t getOp(int fildes, char *buf){
     ssize_t n;
@@ -36,7 +37,7 @@ void stdizeName(char * stdName, char * name){
 int main(int argc, char * argv[]){
     Artigo a;
     char buf[128], stdName[10], op, *currentTok;
-    int numread, preco, codigo, readartigo;
+    int numread, preco, codigo, readartigo, stock;
 
     numread = getOp(0, buf);
 
@@ -52,13 +53,15 @@ int main(int argc, char * argv[]){
                 preco = atoi(currentTok);
                 a = newArtigo(sizeof(stdName),preco);
                 saveArtigo(a, stdName);
+                saveToStock(0);
                 break;
             case 'g':
                 currentTok = strtok(NULL, " ");
                 codigo = atoi(currentTok);
                 readartigo = getArtigo(codigo, stdName, &a);
+                getStock(codigo, &stock);
                 if(readartigo)
-                    printf("[DEBUG] O Preco do produto %s é: %f\n", stdName, a.preco);
+                    printf("[DEBUG] O Preco do produto %s é: %f com stock %d.\n", stdName, a.preco, stock);
                 else
                     printf("[DEBUG] O Artigo de codigo %d não existe\n", codigo);
                 break;
@@ -79,8 +82,9 @@ int main(int argc, char * argv[]){
             case 't':
                 translateArtigos();
                 break;
-            case default:
+            default:
                 printf("[DEBUG] Introduza uma operação válida\n");
+                break;
 
         }
 
