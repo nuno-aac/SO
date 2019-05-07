@@ -79,6 +79,8 @@ int main(int argc, char * argv[]){
             case 't':
                 translateArtigos();
                 break;
+            case default:
+                printf("[DEBUG] Introduza uma operação válida\n");
 
         }
 
