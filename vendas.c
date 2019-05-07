@@ -32,6 +32,17 @@ void vendaTrocaMontante(Venda *v, double montante){
     (v -> montante) = montante;
 }
 
+int getVenda(off_t code, Venda *v){
+    int fd, numread;
+
+    fd = open("./vendas", O_RDONLY, 0700);
+    lseek(fd, code * sizeof(Venda), SEEK_SET);
+    numread = read(fd, v, sizeof(Venda));
+    close(fd);
+
+    return numread;
+}
+
 void saveVenda(Venda *v){
     int fd;
 
