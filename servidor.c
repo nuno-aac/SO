@@ -4,9 +4,28 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "stock.h"
+#include "vendas.h"
+#include "artigo.h"
+
+int makeVenda(off_t code, int quant){
+	char stdName[10];
+	int montante;
+	Venda v;
+	Artigo a;
+
+	if(getArtigo(code, stdName, &a)){
+		montante = quant * a.preco;
+		newVenda(code, quant, montante);
+		saveVenda(v);
+		updateStock(code, quant);
+		return 1;
+	}
+
+	return 0;
+}
 
 int main() {
-	int fstock, fvendas, input;
+	int input;
 	int op, numread, stock, code;
 
 	printf("Starting server...\n");
@@ -16,11 +35,8 @@ int main() {
 	if (!fork()) {
 		printf("Opening pipe\n");
 		input = open("pip", O_RDONLY);
-		printf("Opening vendas\n");
-		fvendas = open("vendas", O_CREAT | O_WRONLY | O_APPEND, 0644);
 		printf("Reading\n");
 		while (1) {
-			char buf[1024];
 			numread = read(input, &op, sizeof(int));
 			//printf("[DEBUG] OP %d", op);
 			if (numread > 0){
@@ -30,6 +46,19 @@ int main() {
 						read(input, &code, sizeof(int));
 						getStock(code, &stock);
 						printf("[DEBUG] Stock do produto %d: %d\n", code, stock);
+						break;
+					case 1:
+						read(input, &code, sizeof(int));
+						read(input, &stock, sizeof(int));
+						if(stock < 0){
+							if(!makeVenda(code, stock))
+								printf("O produto %d não existe\n", code);
+						}
+						else
+							if(!updateStock(code, stock))
+								printf("O produto %d não existe\n", code);
+						break;
+
 				}
 			}
 		}

@@ -4,8 +4,8 @@ CFLAGS = -O3 -Wall
 ma: stock.o artigo.o manutencao.o
 	$(CC) $(CFLAGS) artigo.o manutencao.o stock.o -o ma
 
-sv: stock.o vendas.o servidor.o
-	$(CC) $(CFLAGS) stock.o vendas.o servidor.o -o sv
+sv: stock.o vendas.o artigo.o servidor.o
+	$(CC) $(CFLAGS) stock.o vendas.o servidor.o artigo.o -o sv
 
 cv: cliente_vendas.o
 	$(CC) $(CFLAGS) cliente_vendas.o -o cv
@@ -29,4 +29,4 @@ cliente_vendas.o: cliente_vendas.c
 	$(CC) $(CFLAGS) -c cliente_vendas.c
 
 clean:
-	rm *.o ma strings artigos vendas stocks artigos.txt
+	rm *.o ma sv cv strings artigos vendas stocks artigos.txt

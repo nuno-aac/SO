@@ -16,22 +16,6 @@ Venda newVenda(int codigo, int quantidade, double montante){
     return v;
 }
 
-int getCodigo(Venda *v){
-    return (v -> codigo);
-}
-
-int getQuantidade(Venda *v){
-  return (v -> quantidade);
-}
-
-double getMontante(Venda *v){
-  return (v -> montante);
-}
-
-void vendaTrocaMontante(Venda *v, double montante){
-    (v -> montante) = montante;
-}
-
 int getVenda(off_t code, Venda *v){
     int fd, numread;
 
@@ -43,11 +27,11 @@ int getVenda(off_t code, Venda *v){
     return numread;
 }
 
-void saveVenda(Venda *v){
+void saveVenda(Venda v){
     int fd;
 
     fd = open("./vendas", O_CREAT | O_APPEND | O_WRONLY, 0700);
-    write(fd, v, sizeof(Venda));
+    write(fd, &v, sizeof(Venda));
     close(fd);
 
     return;

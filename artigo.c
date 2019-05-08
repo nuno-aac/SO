@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "artigo.h"
 
-Artigo newArtigo(off_t code, double preco){
+Artigo newArtigo(off_t code, int preco){
     Artigo a;
 
     a.preco =  preco;
@@ -18,11 +18,11 @@ int artigoPreco(Artigo *a){
     return (a -> preco);
 }
 
-void artigoTrocaPreco(Artigo *a, double preco){
+void artigoTrocaPreco(Artigo *a, int preco){
     (a -> preco) = preco;
 }
 
-double getPreco(Artigo *a){
+int getPreco(Artigo *a){
     return (a -> preco);
 }
 
@@ -60,7 +60,7 @@ int getArtigo(off_t code, char * stdName, Artigo *a){
     return numread;
 }
 
-void updateArtigoPreco(off_t code, double preco){
+void updateArtigoPreco(off_t code, int preco){
     int fd;
     char stdName[10];
     Artigo a;
@@ -96,7 +96,7 @@ void translateArtigos(){
     code = 0;
 
     while(read = getArtigo(code, stdName, &a) && read > 0){
-        snprintf(string, 50, "Artigo:%s Preco:%f\n\0", stdName, a.preco);
+        snprintf(string, 50, "Artigo:%s Preco:%d\n\0", stdName, a.preco);
         if(code == 0)
             fd = open("./artigos.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else

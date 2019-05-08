@@ -27,18 +27,17 @@ int getStock(off_t code, int * quantidade){
     return numread;
 }
 
-void updateStock(off_t code, int changeQuant){
-    int fd;
-    int quantActual;
+int updateStock(off_t code, int changeQuant){
+    int fd, quantActual, numread;
 
-    getStock(code, &quantActual);
+    if(getStock(code, &quantActual)){
+        quantActual += changeQuant;
+        fd = open("./stocks", O_WRONLY, 0700);
+        lseek(fd, code * sizeof(int), SEEK_SET);
+        write(fd, &quantActual, sizeof(int));
+        close(fd);
+        return 1;
+    }
 
-    quantActual += changeQuant;
-
-    fd = open("./stocks", O_WRONLY, 0700);
-    lseek(fd, code * sizeof(int), SEEK_SET);
-    write(fd, quantActual, sizeof(int));
-    close(fd);
-
-    return;
+    return 0;
 }

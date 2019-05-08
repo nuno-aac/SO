@@ -53,7 +53,7 @@ int main(int argc, char * argv[]){
                 preco = atoi(currentTok);
                 a = newArtigo(sizeof(stdName),preco);
                 saveArtigo(a, stdName);
-                saveToStock(0);
+                saveToStock(15);
                 break;
             case 'g':
                 currentTok = strtok(NULL, " ");
@@ -61,7 +61,7 @@ int main(int argc, char * argv[]){
                 readartigo = getArtigo(codigo, stdName, &a);
                 getStock(codigo, &stock);
                 if(readartigo)
-                    printf("[DEBUG] O Preco do produto %s é: %f com stock %d.\n", stdName, a.preco, stock);
+                    printf("[DEBUG] O Preco do produto %s é: %d com stock %d.\n", stdName, a.preco, stock);
                 else
                     printf("[DEBUG] O Artigo de codigo %d não existe\n", codigo);
                 break;
