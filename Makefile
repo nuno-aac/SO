@@ -29,4 +29,4 @@ cliente_vendas.o: cliente_vendas.c
 	$(CC) $(CFLAGS) -c cliente_vendas.c
 
 clean:
-	rm *.o ma STRINGS ARTIGOS vendas stocks artigos.txt
+	rm *.o ma strings artigos vendas stocks artigos.txt

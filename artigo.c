@@ -33,11 +33,11 @@ off_t getStringPos(Artigo *a){
 void saveArtigo(Artigo a, char * stdName){
     int fd;
 
-    fd = open("./ARTIGOS", O_CREAT | O_APPEND | O_WRONLY, 0700);
+    fd = open("./artigos", O_CREAT | O_APPEND | O_WRONLY, 0700);
     write(fd, &a, sizeof(Artigo));
     close(fd);
 
-    fd = open("./STRINGS", O_CREAT | O_APPEND | O_WRONLY, 0700);
+    fd = open("./strings", O_CREAT | O_APPEND | O_WRONLY, 0700);
     write(fd, stdName, sizeof(stdName));
     close(fd);
 
@@ -47,12 +47,12 @@ void saveArtigo(Artigo a, char * stdName){
 int getArtigo(off_t code, char * stdName, Artigo *a){
     int fd, numread;
 
-    fd = open("./ARTIGOS", O_RDONLY, 0700);
+    fd = open("./artigos", O_RDONLY, 0700);
     lseek(fd, code * sizeof(Artigo), SEEK_SET);
     numread = read(fd, a, sizeof(Artigo));
     close(fd);
 
-    fd = open("./STRINGS", O_RDONLY, 0700);
+    fd = open("./strings", O_RDONLY, 0700);
     lseek(fd, code * sizeof(stdName), SEEK_SET);
     read(fd, stdName, sizeof(stdName));
     close(fd);
@@ -68,7 +68,7 @@ void updateArtigoPreco(off_t code, double preco){
     getArtigo(code, stdName, &a);
     a.preco = preco;
 
-    fd = open("./ARTIGOS", O_WRONLY, 0700);
+    fd = open("./artigos", O_WRONLY, 0700);
     lseek(fd, code * sizeof(Artigo), SEEK_SET);
     write(fd, &a, sizeof(Artigo));
     close(fd);
@@ -79,7 +79,7 @@ void updateArtigoPreco(off_t code, double preco){
 void updateArtigoNome(off_t code, char * stdName){
     int fd;
 
-    fd = open("./STRINGS", O_WRONLY, 0700);
+    fd = open("./strings", O_WRONLY, 0700);
     lseek(fd,code * sizeof(stdName), SEEK_SET);
     write(fd, stdName, sizeof(stdName));
     close(fd);

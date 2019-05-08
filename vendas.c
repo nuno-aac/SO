@@ -46,7 +46,7 @@ int getVenda(off_t code, Venda *v){
 void saveVenda(Venda *v){
     int fd;
 
-    fd = open("./VENDAS", O_CREAT | O_APPEND | O_WRONLY, 0700);
+    fd = open("./vendas", O_CREAT | O_APPEND | O_WRONLY, 0700);
     write(fd, v, sizeof(Venda));
     close(fd);
 
