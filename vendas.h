@@ -8,3 +8,4 @@ typedef struct venda{
 Venda newVenda(int codigo, int quantidade, double montante);
 int getVenda(off_t code, Venda *v);
 void saveVenda(Venda v);
+void translateVendas();

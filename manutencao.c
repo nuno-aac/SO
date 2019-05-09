@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "artigo.h"
+#include "vendas.h"
 #include "stock.h"
 
 ssize_t getOp(int fildes, char *buf){
@@ -81,6 +82,9 @@ int main(int argc, char * argv[]){
                 break;
             case 't':
                 translateArtigos();
+                break;
+            case 'v':
+                translateVendas();
                 break;
             default:
                 printf("[DEBUG] Introduza uma operação válida\n");

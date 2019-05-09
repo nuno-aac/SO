@@ -1,8 +1,8 @@
 CC = gcc
 CFLAGS = -O3 -Wall
 
-ma: stock.o artigo.o manutencao.o
-	$(CC) $(CFLAGS) artigo.o manutencao.o stock.o -o ma
+ma: stock.o artigo.o manutencao.o vendas.o
+	$(CC) $(CFLAGS) artigo.o manutencao.o stock.o vendas.o -o ma
 
 sv: stock.o vendas.o artigo.o servidor.o
 	$(CC) $(CFLAGS) stock.o vendas.o servidor.o artigo.o -o sv
@@ -35,4 +35,4 @@ agregador.o: agregador.c vendas.h
 		$(CC) $(CFLAGS) -c agregador.c
 
 clean:
-	rm *.o ma sv cv strings artigos vendas stocks artigos.txt
+	rm *.o ma sv cv strings artigos vendas stocks artigos.txt vendas.txt

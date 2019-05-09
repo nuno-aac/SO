@@ -12,12 +12,13 @@ int makeVenda(off_t code, int quant){
 	int montante;
 	Venda v;
 	Artigo a;
+	quant *= -1;
 
 	if(getArtigo(code, stdName, &a)){
 		montante = quant * a.preco;
-		newVenda(code, quant, montante);
+		v = newVenda(code, quant, montante);
 		saveVenda(v);
-		updateStock(code, quant);
+		updateStock(code, -quant);
 		return 1;
 	}
 

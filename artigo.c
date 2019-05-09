@@ -96,7 +96,7 @@ void translateArtigos(){
     code = 0;
 
     while(read = getArtigo(code, stdName, &a) && read > 0){
-        snprintf(string, 50, "Artigo:%s Preco:%d\n\0", stdName, a.preco);
+        snprintf(string, 50, "Artigo: %s Preco: %d\n\0", stdName, a.preco);
         if(code == 0)
             fd = open("./artigos.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else
