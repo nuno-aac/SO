@@ -10,6 +10,9 @@ sv: stock.o vendas.o artigo.o servidor.o
 cv: cliente_vendas.o
 	$(CC) $(CFLAGS) cliente_vendas.o -o cv
 
+ag: agregador.o vendas.o
+	$(CC) $(CFLAGS) agregador.o vendas.o -o ag
+
 manutencao.o: manutencao.c artigo.h stock.h
 	$(CC) $(CFLAGS) -c manutencao.c
 
@@ -27,6 +30,9 @@ servidor.o: servidor.c
 
 cliente_vendas.o: cliente_vendas.c
 	$(CC) $(CFLAGS) -c cliente_vendas.c
+
+agregador.o: agregador.c vendas.h
+		$(CC) $(CFLAGS) -c agregador.c
 
 clean:
 	rm *.o ma sv cv strings artigos vendas stocks artigos.txt

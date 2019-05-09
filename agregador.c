@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "vendas.h"
 
-Venda getVendaAgregada(off_t * code, int codigoVenda){
+int getVendaAgregada(off_t * code, int codigoVenda,Venda * vendaAgregada){
     int fd, numread;
     off_t agcode;
     Venda v;
@@ -17,11 +17,11 @@ Venda getVendaAgregada(off_t * code, int codigoVenda){
         if(v.codigo == codigoVenda) break;
         agcode++;
     }
+
     code = &agcode;
-    if(numread > 0)
-        return v;
-    else
-        return NULL;
+    vendaAgregada = &v;
+
+    return numread;
 }
 
 void updateVendaAgregada(off_t codeAgregada, Venda v){
@@ -36,16 +36,20 @@ void updateVendaAgregada(off_t codeAgregada, Venda v){
 }
 
 int main(){
-    int code, codeAgregada;
-    Venda v, vendaAgregada:
+    int code;
+    off_t codeAgregada;
+    Venda v, vendaAgregada;
 
     code = 0;
+    codeAgregada = 0;
 
     while(getVenda(code, &v)){
-        vendaAgregada = getVendaAgregada(&codeAgregado, v.codigo);
-        v.montante += vendaAgregada.montante;
-        v.quantidade += vendaAgregada.quantidade;
+        if(getVendaAgregada(&codeAgregada, v.codigo, &vendaAgregada)){
+            v.montante += vendaAgregada.montante;
+            v.quantidade += vendaAgregada.quantidade;
+        }
         updateVendaAgregada(codeAgregada, v);
+        code++;
     }
     return 0;
 }
