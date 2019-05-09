@@ -35,4 +35,4 @@ agregador.o: agregador.c vendas.h
 		$(CC) $(CFLAGS) -c agregador.c
 
 clean:
-	rm *.o ma sv cv ag strings artigos vendas stocks artigos.txt vendas.txt
+	rm *.o ma sv cv ag strings artigos vendas agregado stocks artigos.txt vendas.txt agregado.txt
