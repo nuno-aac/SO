@@ -32,21 +32,24 @@ int makeVenda(off_t code, int quant){
 }
 
 int main() {
-	int input, output;
-	int op, numread, stock, code, resVenda;
-	char string[64];
+	int pidPipe, output, input;
+	int op, numread, stock, code, resVenda, pid;
+	char string[64], cts[12], stc[12];
 
 	printf("Starting server...\n");
 	mkfifo("client_to_server", 0644);
 
 	printf("Opening pipe\n");
-	output = open("server_to_client", O_WRONLY);
-	input = open("client_to_server", O_RDONLY);
+	pidPipe = open("client_to_server", O_RDONLY);
 	printf("Reading\n");
 	while (1) {
-		numread = read(input, &op, sizeof(int));
-		//printf("[DEBUG] OP %d", op);
+		numread = read(pidPipe, &pid, sizeof(int));
 		if (numread > 0){
+			snprintf(cts, 12, "cts%d", pid);
+			snprintf(stc, 12, "stc%d", pid);
+			input = open(cts, O_RDONLY);
+			output = open(stc, O_WRONLY);
+			read(input, &op, sizeof(int));
 			switch (op) {
 				case 0:
 					read(input, &code, sizeof(int));
@@ -90,7 +93,10 @@ int main() {
 						}
 					break;
 			}
+			close(input);
+			close(output);
 		}
 	}
+	close(pidPipe);
 	return 0;
 }
