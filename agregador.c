@@ -8,19 +8,18 @@
 int getVendaAgregada(off_t * code, int codigoVenda,Venda * vendaAgregada){
     int fd, numread;
     off_t agcode;
-    Venda v;
 
+    numread = 0;
     agcode = 0;
 
-    fd = open("./agregado", O_RDONLY | O_CREAT, 0700);
-    while(numread = read(fd, &v, sizeof(Venda))  && numread > 0){
-        if(v.codigo == codigoVenda) break;
-        agcode++;
+    if(fd = open("./agregado", O_RDONLY, 0700)){
+        while(numread = read(fd, vendaAgregada, sizeof(Venda))){
+            if(vendaAgregada->codigo == codigoVenda) break;
+            agcode++;
+        }
     }
-    printf("[debug] agcode:%lu\n", agcode);
+    close(fd);
     * code = agcode;
-    * vendaAgregada = v;
-
     return numread;
 }
 
@@ -43,7 +42,7 @@ void translateAgregado(){
     code = 0;
 
     while(read = readVendaAgregada(code, &v) && read > 0){
-        snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %f\n\0", v.codigo, v.quantidade, v.montante);
+        snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n\0", v.codigo, v.quantidade, v.montante);
         if(code == 0)
             fd = open("./agregado.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else
@@ -59,8 +58,7 @@ void translateAgregado(){
 void updateVendaAgregada(off_t codeAgregada, Venda v){
     int fd;
 
-    printf("[DEBUG]Escrevendo no codigo:%lu\n", codeAgregada);
-    fd = open("./agregado",  O_CREAT | O_WRONLY, 0700);
+    fd = open("./agregado",O_WRONLY, 0700);
     lseek(fd,codeAgregada * sizeof(Venda), SEEK_SET);
     write(fd, &v, sizeof(Venda));
     close(fd);
@@ -69,24 +67,26 @@ void updateVendaAgregada(off_t codeAgregada, Venda v){
 }
 
 int main(){
-    int code;
+    int code, fd;
     off_t codeAgregada;
-    Venda v, vendaAgregada;
+    Venda v, vendaAgregada, vendaNovaAgregada;
 
     code = 0;
     codeAgregada = 0;
 
+    fd = open("./agregado",  O_CREAT, 0700);
+    close(fd);
+
     while(getVenda(code, &v)){
-        printf("Venda do produto: %d, quant: %d montante: %f\n",v.codigo , v.quantidade, v.montante);
         if(getVendaAgregada(&codeAgregada, v.codigo, &vendaAgregada)){
-            printf("[DEBUG] Encontrou no agregado CODIGO:%lu\n", codeAgregada);
-            printf("[UPDATED]Venda Agregada: %d, quant: %d montante: %f\n",vendaAgregada.codigo , vendaAgregada.quantidade, vendaAgregada.montante);
-            v.montante += vendaAgregada.montante;
-            v.quantidade += vendaAgregada.quantidade;
-            printf("[UPDATED]Venda do produto: %d, quant: %d montante: %f\n",v.codigo , v.quantidade, v.montante);
+            vendaNovaAgregada.codigo = v.codigo;
+            vendaNovaAgregada.montante = v.montante + vendaAgregada.montante;
+            vendaNovaAgregada.quantidade = v.quantidade + vendaAgregada.quantidade;
+            updateVendaAgregada(codeAgregada, vendaNovaAgregada);
         }
-        printf("[DEBUG main] Escrevendo no codigo CODIGO:%lu\n", codeAgregada);
-        updateVendaAgregada(codeAgregada, v);
+        else{
+            updateVendaAgregada(codeAgregada, v);
+        }
         code++;
     }
     translateAgregado();

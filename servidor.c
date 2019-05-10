@@ -51,6 +51,7 @@ int main() {
 					case 1:
 						read(input, &code, sizeof(int));
 						read(input, &stock, sizeof(int));
+						printf("codigodoproduto:%d, stock: %d, \n", code, stock);
 						if(stock < 0){
 							if(!makeVenda(code, stock))
 								printf("O produto %d não existe\n", code);

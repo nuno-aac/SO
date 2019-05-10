@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include "vendas.h"
 
-Venda newVenda(int codigo, int quantidade, double montante){
+Venda newVenda(int codigo, int quantidade, int montante){
     Venda v;
 
     v.codigo =  codigo;
@@ -23,8 +23,9 @@ int getVenda(off_t code, Venda *v){
     lseek(fd, code * sizeof(Venda), SEEK_SET);
     numread = read(fd, v, sizeof(Venda));
     close(fd);
-
+    
     return numread;
+
 }
 
 void saveVenda(Venda v){
@@ -45,7 +46,7 @@ void translateVendas(){
     code = 0;
 
     while(read = getVenda(code, &v) && read > 0){
-        snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %f\n\0", v.codigo, v.quantidade, v.montante);
+        snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n\0", v.codigo, v.quantidade, v.montante);
         if(code == 0)
             fd = open("./vendas.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else
