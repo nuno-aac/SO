@@ -42,7 +42,7 @@ void translateAgregado(){
     code = 0;
 
     while(read = readVendaAgregada(code, &v) && read > 0){
-        snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n\0", v.codigo, v.quantidade, v.montante);
+        snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n", v.codigo, v.quantidade, v.montante);
         if(code == 0)
             fd = open("./agregado.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else

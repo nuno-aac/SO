@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <string.h>
 #include <unistd.h>
 #include "stock.h"
 #include "vendas.h"
@@ -9,33 +10,40 @@
 
 int makeVenda(off_t code, int quant){
 	char stdName[10];
-	int montante;
+	int montante, stock;
 	Venda v;
 	Artigo a;
 	quant *= -1;
 
-	if(getArtigo(code, stdName, &a)){
-		montante = quant * a.preco;
-		v = newVenda(code, quant, montante);
-		saveVenda(v);
-		updateStock(code, -quant);
-		return 1;
-	}
+	stock = 0;
+	if(!getStock(code, &stock))
+		return 0;
 
-	return 0;
+	if((stock - quant) > 0)
+		if(getArtigo(code, stdName, &a)){
+			montante = quant * a.preco;
+			v = newVenda(code, quant, montante);
+			saveVenda(v);
+			updateStock(code, -quant);
+			return 1;
+		}
+
+	return -1;
 }
 
 int main() {
-	int input;
-	int op, numread, stock, code;
+	int input, output;
+	int op, numread, stock, code, resVenda;
+	char string[64];
 
 	printf("Starting server...\n");
-	mkfifo("pip", 0644);
+	mkfifo("client_to_server", 0644);
 
 	printf("Forking..\n");
 	if (!fork()) {
 		printf("Opening pipe\n");
-		input = open("pip", O_RDONLY);
+		output = open("server_to_client", O_WRONLY);
+		input = open("client_to_server", O_RDONLY);
 		printf("Reading\n");
 		while (1) {
 			numread = read(input, &op, sizeof(int));
@@ -45,20 +53,44 @@ int main() {
 					case 0:
 						//printf("[DEBUG] OP %d", op);
 						read(input, &code, sizeof(int));
-						getStock(code, &stock);
-						printf("[DEBUG] Stock do produto %d: %d\n", code, stock);
+						if(getStock(code, &stock)){
+							snprintf(string, 64, "[SERVER] Stock do produto %d: %d\n", code, stock);
+							write(output, string, strlen(string));
+						}
+						else{
+							snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
+							write(output, string, strlen(string));
+						}
 						break;
 					case 1:
 						read(input, &code, sizeof(int));
 						read(input, &stock, sizeof(int));
-						printf("codigodoproduto:%d, stock: %d, \n", code, stock);
 						if(stock < 0){
-							if(!makeVenda(code, stock))
-								printf("O produto %d não existe\n", code);
+							resVenda = makeVenda(code, stock);
+							if(resVenda == 1){
+								getStock(code, &stock);
+								snprintf(string, 64, "[SERVER] Novo stock do produto %d: %d\n", code, stock);
+								write(output, string, strlen(string));
+							}
+							else if(resVenda == 0){
+								snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
+								write(output, string, strlen(string));
+							}
+							else{
+								snprintf(string, 64, "[SERVER] O produto %d não tem stock disponivel\n", code);
+								write(output, string, strlen(string));
+							}
 						}
 						else
-							if(!updateStock(code, stock))
-								printf("O produto %d não existe\n", code);
+							if(updateStock(code, stock)){
+								getStock(code, &stock);
+								snprintf(string, 64, "[SERVER] Novo stock do produto %d: %d\n", code, stock);
+								write(output, string, strlen(string));
+							}
+							else{
+								snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
+								write(output, string, strlen(string));
+							}
 						break;
 
 				}
