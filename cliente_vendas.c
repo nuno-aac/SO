@@ -26,9 +26,11 @@ ssize_t readInput(int fildes, char *buf){
 
 int main(int argc, char* argv[]) {
 	char buf[128], string[64], *currentTok;
-    int numread, codigo, stock, op;
+    int numread, codigo, stock, op, pid;
 
-    printf("Starting client...\n");
+    pid = getpid();
+
+    printf("Starting client...%d\n",pid);
 	mkfifo("server_to_client", 0644);
 
     int client = open("server_to_client", O_RDONLY);

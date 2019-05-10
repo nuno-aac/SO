@@ -49,7 +49,6 @@ int main() {
 		if (numread > 0){
 			switch (op) {
 				case 0:
-					printf("[DEBUG] OP %d", op);
 					read(input, &code, sizeof(int));
 					if(getStock(code, &stock)){
 						snprintf(string, 64, "[SERVER] Stock do produto %d: %d\n", code, stock);
@@ -61,7 +60,6 @@ int main() {
 					}
 					break;
 				case 1:
-					printf("[DEBUG] OP %d", op);
 					read(input, &code, sizeof(int));
 					read(input, &stock, sizeof(int));
 					if(stock < 0){
