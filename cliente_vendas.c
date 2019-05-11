@@ -67,6 +67,10 @@ int main(int argc, char* argv[]) {
 		close(s2c);
     	close(c2s);
     }
+    
+    remove(cts);
+    remove(stc);;
+
     close(server);
     return 0;
 }
