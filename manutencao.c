@@ -54,7 +54,7 @@ int main(int argc, char * argv[]){
                 preco = atoi(currentTok);
                 a = newArtigo(sizeof(stdName),preco);
                 saveArtigo(a, stdName);
-                saveToStock(15);
+                saveToStock(0);
                 break;
             case 'g':
                 currentTok = strtok(NULL, " ");

@@ -46,6 +46,7 @@ int main() {
 	printf("Reading\n");
 	while (1) {
 		numread = read(pidPipe, &pid, sizeof(int));
+		if(fork() == 0){
 		if (numread > 0){
 			snprintf(cts, 12, "cts%d", pid);
 			snprintf(stc, 12, "stc%d", pid);
@@ -103,6 +104,11 @@ int main() {
 			close(input);
 			close(output);
 		}
+		_exit(0);
+	}
+	else{
+		wait(NULL);
+	}
 	}
 	close(pidPipe);
 	return 0;
