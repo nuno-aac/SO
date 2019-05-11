@@ -1,8 +1,12 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <string.h>
 #include <unistd.h>
+
+int pid;
 
 ssize_t readInput(int fildes, char *buf){
     ssize_t n;
@@ -26,7 +30,7 @@ ssize_t readInput(int fildes, char *buf){
 
 int main(int argc, char* argv[]) {
 	char buf[128], string[64], *currentTok, stc[12], cts[12];
-    int numread, codigo, stock, op, pid;
+    int numread, codigo, stock, op;
 
     pid = getpid();
 
@@ -38,8 +42,10 @@ int main(int argc, char* argv[]) {
 
 	int server = open("client_to_server", O_WRONLY);
 
+
     numread = readInput(0, buf);
 	while (numread > 1){
+        if(fork() == 0){
 		currentTok = strtok(buf, " ");
         codigo = atoi(currentTok);
         currentTok = strtok(NULL, " ");
@@ -49,25 +55,35 @@ int main(int argc, char* argv[]) {
 
         if(currentTok == NULL){
             op = 0;
-            write(c2s, &op, sizeof(int));
-            write(c2s, &codigo, sizeof(int));
+            while(write(c2s, &op, sizeof(int)) == 0);
+            while(write(c2s, &codigo, sizeof(int)) == 0);
             readInput(s2c, string);
-            write(1, string, strlen(string));
+            while(write(1, string, strlen(string)) == 0);
         }
         else{
             stock = atoi(currentTok);
             op = 1;
-            write(c2s, &op, sizeof(int));
-            write(c2s, &codigo, sizeof(int));
-            write(c2s, &stock, sizeof(int));
-            readInput(s2c, string);
-            write(1, string, strlen(string));
+            printf("[DEBUG] op:%d, codigo: %d stock: %d\n",op, codigo, stock);
+            while(write(c2s, &op, sizeof(int)) == 0);
+            while(write(c2s, &codigo, sizeof(int)) == 0);
+            while(write(c2s, &stock, sizeof(int)) == 0);
+            printf("reading from server\n");
+            while(readInput(s2c, string) == 0){
+                printf("help i'm stuck\n");
+            }
+            while(write(1, string, strlen(string)) == 0);
+            printf("read!\n");
         }
-		numread = readInput(0, buf);
-		close(s2c);
-    	close(c2s);
+        close(s2c);
+        close(c2s);
+        _exit(0);
+        }
+        else{
+            wait(NULL);
+            numread = readInput(0, buf);
+        }
     }
-    
+
     remove(cts);
     remove(stc);;
 

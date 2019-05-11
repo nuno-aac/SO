@@ -36,6 +36,8 @@ int main() {
 	int op, numread, stock, code, resVenda, pid;
 	char string[64], cts[12], stc[12];
 
+//	sigaction(SIGPIPE, &(struct sigaction){SIG_IGN}, NULL);
+
 	printf("Starting server...\n");
 	mkfifo("client_to_server", 0644);
 
@@ -49,10 +51,10 @@ int main() {
 			snprintf(stc, 12, "stc%d", pid);
 			input = open(cts, O_RDONLY);
 			output = open(stc, O_WRONLY);
-			read(input, &op, sizeof(int));
+			while(read(input, &op, sizeof(int)) == 0);
 			switch (op) {
 				case 0:
-					read(input, &code, sizeof(int));
+					while(read(input, &code, sizeof(int)) == 0);
 					if(getStock(code, &stock)){
 						snprintf(string, 64, "[SERVER] Stock do produto %d: %d\n", code, stock);
 						write(output, string, strlen(string));
@@ -63,14 +65,19 @@ int main() {
 					}
 					break;
 				case 1:
-					read(input, &code, sizeof(int));
-					read(input, &stock, sizeof(int));
+					while(read(input, &code, sizeof(int)) == 0);
+					while(read(input, &stock, sizeof(int)) == 0){
+						printf("fuck meeeee ass\n");
+					}
+					if(stock != -2) printf("[DEBUG%d] op:%d, codigo: %d stock: %d\n", pid, op, code, stock);
 					if(stock < 0){
 						resVenda = makeVenda(code, stock);
 						if(resVenda == 1){
 							getStock(code, &stock);
 							snprintf(string, 64, "[SERVER] Novo stock do produto %d: %d\n", code, stock);
-							write(output, string, strlen(string));
+							while(write(output, string, strlen(string)) == 0){
+								printf("help seerver is stuuuck\n");
+							}
 						}
 						else if(resVenda == 0){
 							snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
