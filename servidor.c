@@ -8,6 +8,7 @@
 #include "vendas.h"
 #include "artigo.h"
 
+
 int makeVenda(off_t code, int quant){
 	char stdName[10];
 	int montante, stock;
@@ -37,7 +38,6 @@ int main() {
 	char string[64], cts[12], stc[12];
 
 //	sigaction(SIGPIPE, &(struct sigaction){SIG_IGN}, NULL);
-
 	printf("Starting server...\n");
 	mkfifo("client_to_server", 0644);
 
@@ -67,9 +67,7 @@ int main() {
 					break;
 				case 1:
 					while(read(input, &code, sizeof(int)) == 0);
-					while(read(input, &stock, sizeof(int)) == 0){
-						printf("fuck meeeee ass\n");
-					}
+					while(read(input, &stock, sizeof(int)) == 0);
 					if(stock != -2) printf("[DEBUG%d] op:%d, codigo: %d stock: %d\n", pid, op, code, stock);
 					if(stock < 0){
 						resVenda = makeVenda(code, stock);
