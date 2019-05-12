@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "vendas.h"
 
 int getVendaAgregada(off_t * code, int codigoVenda,Venda * vendaAgregada){
@@ -34,7 +35,7 @@ int readVendaAgregada(off_t code, Venda *v){
     return numread;
 }
 
-void translateAgregado(){
+void translateAgregado(char* fich){
     int fd, code, read;
     char string[100];;
     Venda v;
@@ -44,9 +45,9 @@ void translateAgregado(){
     while(read = readVendaAgregada(code, &v) && read > 0){
         snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n", v.codigo, v.quantidade, v.montante);
         if(code == 0)
-            fd = open("./agregado.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
+            fd = open(fich,  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else
-            fd = open("./agregado.txt",  O_CREAT | O_WRONLY | O_APPEND, 0700);
+            fd = open(fich,  O_CREAT | O_WRONLY | O_APPEND, 0700);
         write(fd, string, strlen(string));
         close(fd);
         code++;
@@ -70,9 +71,17 @@ int main(){
     int code, fd;
     off_t codeAgregada;
     Venda v, vendaAgregada, vendaNovaAgregada;
+    char fich[50];
+    char* timeAux;
 
     code = 0;
     codeAgregada = 0;
+    time_t hora;
+
+    hora = time(NULL);
+    timeAux = ctime(&hora);
+    timeAux[strlen(timeAux)-1] = '\0';
+    snprintf(fich,50,"./%s.dat", timeAux);
 
     fd = open("./agregado",  O_CREAT, 0700);
     close(fd);
@@ -89,6 +98,6 @@ int main(){
         }
         code++;
     }
-    translateAgregado();
+    translateAgregado(fich);
     return 0;
 }

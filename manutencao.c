@@ -48,13 +48,23 @@ int main(int argc, char * argv[]){
         switch (op) {
             case 'a':
                 currentTok = strtok(NULL, " ");
-                stdizeName(stdName, currentTok);
-                //printf("[DEBUG] stdName = %s(com %lu elem mas tamanho %lu)\n", stdName, strlen(stdName), sizeof(stdName));
-                currentTok = strtok(NULL, " ");
-                preco = atoi(currentTok);
-                a = newArtigo(sizeof(stdName),preco);
-                saveArtigo(a, stdName);
-                saveToStock(0);
+                if(currentTok == NULL){
+                    if(fork() == 0){
+                        execlp("./ag", "./ag", NULL);
+                    }
+                    else{
+                        wait(NULL);
+                    }
+                }
+                else{
+                    stdizeName(stdName, currentTok);
+                    //printf("[DEBUG] stdName = %s(com %lu elem mas tamanho %lu)\n", stdName, strlen(stdName), sizeof(stdName));
+                    currentTok = strtok(NULL, " ");
+                    preco = atoi(currentTok);
+                    a = newArtigo(sizeof(stdName),preco);
+                    saveArtigo(a, stdName);
+                    saveToStock(0);
+                }
                 break;
             case 'g':
                 currentTok = strtok(NULL, " ");
