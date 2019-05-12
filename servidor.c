@@ -19,7 +19,7 @@ int makeVenda(off_t code, int quant){
 	if(!getStock(code, &stock))
 		return 0;
 
-	if((stock - quant) > 0)
+	if((stock - quant) >= 0)
 		if(getArtigo(code, stdName, &a)){
 			montante = quant * a.preco;
 			v = newVenda(code, quant, montante);

@@ -104,5 +104,6 @@ int main(){
         code++;
     }
     translateAgregado(fich);
+    remove("./agregado");
     return 0;
 }
