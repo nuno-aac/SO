@@ -1,6 +1,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
 #include <string.h>
 #include <stdlib.h>
 #include "artigo.h"

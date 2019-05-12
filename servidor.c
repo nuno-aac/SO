@@ -34,7 +34,7 @@ int main() {
 	int pidPipe, output, input;
 	int op, numread, stock, code, resVenda, pid;
 	char string[64], cts[12], stc[12];
-//	sigaction(SIGPIPE, &(struct sigaction){SIG_IGN}, NULL);
+
 	printf("Starting server...\n");
 	mkfifo("client_to_server", 0644);
 
@@ -57,13 +57,11 @@ int main() {
 					while(read(input, &code, sizeof(int)) == 0);
 					if(getStock(code, &stock)){
 						snprintf(string, 64, "[SERVER] Stock do produto %d: %d\n", code, stock);
-						printf("[SERVER] Stock do produto %d: %d\n", code, stock);
-						write(output, string, strlen(string));
+						while(write(output, string, strlen(string)) == 0);
 					}
 					else{
-						snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
-						printf("[SERVER] O produto %d não existe\n", code);
-						write(output, string, strlen(string));
+						snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
+						while(write(output, string, strlen(string)) == 0);
 					}
 					break;
 				case 1:
@@ -74,30 +72,26 @@ int main() {
 						if(resVenda > 0){
 							getStock(code, &stock);
 							snprintf(string, 64, "[SERVER] Novo stock do produto %d: %d\n", code, stock);
-							while(write(output, string, strlen(string)) == 0){
-								printf("help seerver is stuuuck\n");
-							}
+							while(write(output, string, strlen(string)) == 0);
 						}
 						else if(resVenda == 0){
-							printf("nao fiz venda hehehe\n");
 							snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
-							write(output, string, strlen(string));
+							while(write(output, string, strlen(string)) == 0);
 						}
 						else{
 							snprintf(string, 64, "[SERVER] O produto %d não tem stock disponivel\n", code);
-							printf("nao fiz venda hehehe\n");
-							write(output, string, strlen(string));
+							while(write(output, string, strlen(string)) == 0);
 						}
 					}
 					else
 						if(updateStock(code, stock)){
 							getStock(code, &stock);
 							snprintf(string, 64, "[SERVER] Novo stock do produto %d: %d\n", code, stock);
-							write(output, string, strlen(string));
+							while(write(output, string, strlen(string)) == 0);
 						}
 						else{
 							snprintf(string, 64, "[SERVER] O produto %d não existe\n", code);
-							write(output, string, strlen(string));
+							while(write(output, string, strlen(string)) == 0);
 						}
 					break;
 			}

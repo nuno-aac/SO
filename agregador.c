@@ -13,13 +13,16 @@ int getVendaAgregada(off_t * code, int codigoVenda,Venda * vendaAgregada){
     numread = 0;
     agcode = 0;
 
-    if(fd = open("./agregado", O_RDONLY, 0700)){
-        while(numread = read(fd, vendaAgregada, sizeof(Venda))){
+    fd = open("./agregado", O_RDONLY, 0700);
+    if(fd != 0){
+        while(read(fd, vendaAgregada, sizeof(Venda))){
+            numread = sizeof(Venda);
             if(vendaAgregada->codigo == codigoVenda) break;
             agcode++;
         }
     }
     close(fd);
+
     * code = agcode;
     return numread;
 }
@@ -36,19 +39,21 @@ int readVendaAgregada(off_t code, Venda *v){
 }
 
 void translateAgregado(char* fich){
-    int fd, code, read;
+    int fd, code;
     char string[100];;
     Venda v;
 
     code = 0;
 
-    while(read = readVendaAgregada(code, &v) && read > 0){
+    while(readVendaAgregada(code, &v)){
         snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n", v.codigo, v.quantidade, v.montante);
         if(code == 0)
             fd = open(fich,  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else
             fd = open(fich,  O_CREAT | O_WRONLY | O_APPEND, 0700);
-        write(fd, string, strlen(string));
+        if(write(fd, string, strlen(string)) == 0){
+            perror("couldn't write string");
+        }
         close(fd);
         code++;
     }
@@ -56,15 +61,15 @@ void translateAgregado(char* fich){
     return;
 }
 
-void updateVendaAgregada(off_t codeAgregada, Venda v){
-    int fd;
+int updateVendaAgregada(off_t codeAgregada, Venda v){
+    int fd, numwrite;
 
     fd = open("./agregado",O_WRONLY, 0700);
     lseek(fd,codeAgregada * sizeof(Venda), SEEK_SET);
-    write(fd, &v, sizeof(Venda));
+    numwrite = write(fd, &v, sizeof(Venda));
     close(fd);
 
-    return;
+    return numwrite;
 }
 
 int main(){

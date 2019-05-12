@@ -44,12 +44,12 @@ int main(int argc, char* argv[]) {
 
 
     numread = readInput(0, buf);
-	while (numread > 1){
+	while (numread > 0){
         if(fork() == 0){
 		currentTok = strtok(buf, " ");
         codigo = atoi(currentTok);
         currentTok = strtok(NULL, " ");
-        write(server, &pid, sizeof(int));
+        while(write(server, &pid, sizeof(int)) == 0);
 		int c2s = open(cts, O_WRONLY);
 		int s2c = open(stc, O_RDONLY);
 
@@ -63,7 +63,6 @@ int main(int argc, char* argv[]) {
         else{
             stock = atoi(currentTok);
             op = 1;
-            printf("[DEBUG] op:%d, codigo: %d stock: %d\n",op, codigo, stock);
             while(write(c2s, &op, sizeof(int)) == 0);
             while(write(c2s, &codigo, sizeof(int)) == 0);
             while(write(c2s, &stock, sizeof(int)) == 0);

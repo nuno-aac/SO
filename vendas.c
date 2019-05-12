@@ -39,19 +39,21 @@ int saveVenda(Venda v){
 }
 
 void translateVendas(){
-    int fd, code, read;
+    int fd, code;
     char string[100];
     Venda v;
 
     code = 0;
 
-    while(read = getVenda(code, &v) && read > 0){
+    while(getVenda(code, &v) > 0){
         snprintf(string, 100, "Venda: %d Quantidade vendida: %d Montante: %d\n", v.codigo, v.quantidade, v.montante);
         if(code == 0)
             fd = open("./vendas.txt",  O_CREAT | O_WRONLY | O_TRUNC, 0700);
         else
             fd = open("./vendas.txt",  O_CREAT | O_WRONLY | O_APPEND, 0700);
-        write(fd, string, strlen(string));
+        if(write(fd, string, strlen(string)) == 0){
+            perror("couldn't write string");
+        }
         close(fd);
         code++;
     }
