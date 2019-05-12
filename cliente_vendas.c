@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
             op = 0;
             while(write(c2s, &op, sizeof(int)) == 0);
             while(write(c2s, &codigo, sizeof(int)) == 0);
-            readInput(s2c, string);
+            while(readInput(s2c, string) == 0);
             while(write(1, string, strlen(string)) == 0);
         }
         else{
@@ -67,12 +67,8 @@ int main(int argc, char* argv[]) {
             while(write(c2s, &op, sizeof(int)) == 0);
             while(write(c2s, &codigo, sizeof(int)) == 0);
             while(write(c2s, &stock, sizeof(int)) == 0);
-            printf("reading from server\n");
-            while(readInput(s2c, string) == 0){
-                printf("help i'm stuck\n");
-            }
+            while(readInput(s2c, string) == 0);
             while(write(1, string, strlen(string)) == 0);
-            printf("read!\n");
         }
         close(s2c);
         close(c2s);
@@ -83,10 +79,8 @@ int main(int argc, char* argv[]) {
             numread = readInput(0, buf);
         }
     }
-
     remove(cts);
-    remove(stc);;
-
+    remove(stc);
     close(server);
     return 0;
 }

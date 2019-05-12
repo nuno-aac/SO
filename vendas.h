@@ -7,5 +7,5 @@ typedef struct venda{
 //API
 Venda newVenda(int codigo, int quantidade, int montante);
 int getVenda(off_t code, Venda *v);
-void saveVenda(Venda v);
+int saveVenda(Venda v);
 void translateVendas();

@@ -28,14 +28,14 @@ int getVenda(off_t code, Venda *v){
 
 }
 
-void saveVenda(Venda v){
-    int fd;
+int saveVenda(Venda v){
+    int fd, r;
 
     fd = open("./vendas", O_CREAT | O_APPEND | O_WRONLY, 0700);
-    write(fd, &v, sizeof(Venda));
+    r = write(fd, &v, sizeof(Venda));
     close(fd);
 
-    return;
+    return r;
 }
 
 void translateVendas(){
