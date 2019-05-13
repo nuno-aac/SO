@@ -98,7 +98,6 @@ int main(){
             vendaNovaAgregada.codigo = v.codigo;
             vendaNovaAgregada.montante = v.montante + vendaAgregada.montante;
             vendaNovaAgregada.quantidade = v.quantidade + vendaAgregada.quantidade;
-            printf("[DEBUG] code:%d montante:%d quant:%d\n", vendaNovaAgregada.codigo, vendaNovaAgregada.montante,vendaNovaAgregada.quantidade);
             updateVendaAgregada(codeAgregada, vendaNovaAgregada);
         }
         else{
