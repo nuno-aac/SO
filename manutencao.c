@@ -60,7 +60,6 @@ int main(int argc, char * argv[]){
                 }
                 else{
                     stdizeName(stdName, currentTok);
-                    //printf("[DEBUG] stdName = %s(com %lu elem mas tamanho %lu)\n", stdName, strlen(stdName), sizeof(stdName));
                     currentTok = strtok(NULL, " ");
                     preco = atoi(currentTok);
                     a = newArtigo(sizeof(stdName),preco);
@@ -74,9 +73,9 @@ int main(int argc, char * argv[]){
                 readartigo = getArtigo(codigo, stdName, &a);
                 getStock(codigo, &stock);
                 if(readartigo)
-                    printf("[DEBUG] O Preco do produto %s é: %d com stock %d.\n", stdName, a.preco, stock);
+                    printf("O Preco do produto %s é: %d com stock %d.\n", stdName, a.preco, stock);
                 else
-                    printf("[DEBUG] O Artigo de codigo %d não existe\n", codigo);
+                    printf("O Artigo de codigo %d não existe\n", codigo);
                 break;
             case 'p':
                 currentTok = strtok(NULL, " ");
@@ -99,7 +98,7 @@ int main(int argc, char * argv[]){
                 translateVendas();
                 break;
             default:
-                printf("[DEBUG] Introduza uma operação válida\n");
+                printf("Introduza uma operação válida\n");
                 break;
 
         }
