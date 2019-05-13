@@ -9,7 +9,7 @@
 #include "artigo.h"
 
 int makeVenda(off_t code, int quant){
-	char stdName[10];
+	char stdName[80];
 	int montante, stock;
 	Venda v;
 	Artigo a;
@@ -33,7 +33,8 @@ int makeVenda(off_t code, int quant){
 int main() {
 	int pidPipe, output, input;
 	int op, numread, stock, code, resVenda, pid;
-	char string[64], cts[12], stc[12];
+	char string[64], cts[12], stc[12], stdName[80];
+	Artigo a;
 
 	printf("Starting server...\n");
 	mkfifo("client_to_server", 0644);
@@ -56,7 +57,8 @@ int main() {
 				case 0:
 					while(read(input, &code, sizeof(int)) == 0);
 					if(getStock(code, &stock)){
-						snprintf(string, 64, "[SERVER] Stock do produto %d: %d\n", code, stock);
+						getArtigo(code, stdName, &a);
+						snprintf(string, 64, "[SERVER] Stock do produto %d: %d com preco %d\n", code, stock, a.preco);
 						while(write(output, string, strlen(string)) == 0);
 					}
 					else{

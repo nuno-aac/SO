@@ -46,7 +46,7 @@ int getArtigo(off_t code, char * stdName, Artigo *a){
 
 int updateArtigoPreco(off_t code, int preco){
     int fd, numwrite;
-    char stdName[10];
+    char stdName[80];
     Artigo a;
 
     getArtigo(code, stdName, &a);
@@ -74,7 +74,7 @@ int updateArtigoNome(off_t code, char * stdName){
 void translateArtigos(){
     int fd, code;
     char string[50];
-    char stdName[10];
+    char stdName[80];
     Artigo a;
 
     code = 0;

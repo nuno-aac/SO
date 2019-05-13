@@ -16,8 +16,10 @@ int getVendaAgregada(off_t * code, int codigoVenda,Venda * vendaAgregada){
     fd = open("./agregado", O_RDONLY, 0700);
     if(fd != 0){
         while(read(fd, vendaAgregada, sizeof(Venda))){
-            numread = sizeof(Venda);
-            if(vendaAgregada->codigo == codigoVenda) break;
+            if(vendaAgregada->codigo == codigoVenda){
+                numread = 1;
+                break;
+            }
             agcode++;
         }
     }
@@ -96,6 +98,7 @@ int main(){
             vendaNovaAgregada.codigo = v.codigo;
             vendaNovaAgregada.montante = v.montante + vendaAgregada.montante;
             vendaNovaAgregada.quantidade = v.quantidade + vendaAgregada.quantidade;
+            printf("[DEBUG] code:%d montante:%d quant:%d\n", vendaNovaAgregada.codigo, vendaNovaAgregada.montante,vendaNovaAgregada.quantidade);
             updateVendaAgregada(codeAgregada, vendaNovaAgregada);
         }
         else{

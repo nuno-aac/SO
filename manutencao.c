@@ -39,8 +39,8 @@ void stdizeName(char * stdName, char * name){
 
 int main(int argc, char * argv[]){
     Artigo a;
-    char buf[128], stdName[10], op, *currentTok;
-    int numread, preco, codigo, readartigo, stock;
+    char buf[128], stdName[80], op, *currentTok;
+    int numread, preco, codigo;
 
     numread = getOp(0, buf);
 
@@ -48,34 +48,14 @@ int main(int argc, char * argv[]){
         currentTok = strtok(buf, " ");
         op = currentTok[0];
         switch (op) {
-            case 'a':
+            case 'i':
                 currentTok = strtok(NULL, " ");
-                if(currentTok == NULL){
-                    if(fork() == 0){
-                        execlp("./ag", "./ag", NULL);
-                    }
-                    else{
-                        wait(NULL);
-                    }
-                }
-                else{
-                    stdizeName(stdName, currentTok);
-                    currentTok = strtok(NULL, " ");
-                    preco = atoi(currentTok);
-                    a = newArtigo(sizeof(stdName),preco);
-                    saveArtigo(a, stdName);
-                    saveToStock(0);
-                }
-                break;
-            case 'g':
+                stdizeName(stdName, currentTok);
                 currentTok = strtok(NULL, " ");
-                codigo = atoi(currentTok);
-                readartigo = getArtigo(codigo, stdName, &a);
-                getStock(codigo, &stock);
-                if(readartigo)
-                    printf("O Preco do produto %s é: %d com stock %d.\n", stdName, a.preco, stock);
-                else
-                    printf("O Artigo de codigo %d não existe\n", codigo);
+                preco = atoi(currentTok);
+                a = newArtigo(sizeof(stdName),preco);
+                saveArtigo(a, stdName);
+                saveToStock(0);
                 break;
             case 'p':
                 currentTok = strtok(NULL, " ");
@@ -90,6 +70,14 @@ int main(int argc, char * argv[]){
                 currentTok = strtok(NULL, " ");
                 stdizeName(stdName, currentTok);
                 updateArtigoNome(codigo, stdName);
+                break;
+            case 'a':
+                if(fork() == 0){
+                    execlp("./ag", "./ag", NULL);
+                }
+                else{
+                    wait(NULL);
+                }
                 break;
             case 't':
                 translateArtigos();
